@@ -463,6 +463,7 @@ let (store0, env0) = make_env [
   ; ("cdr", cdr)
   ; ("<", less)
   ; ("+", add)
+  ; ("eqv?", eqv)
   ; ("set-car!", setcar)
   ; ("apply", apply)
   ; ("call-with-current-continuation", cwcc)
