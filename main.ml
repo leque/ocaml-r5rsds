@@ -5,10 +5,9 @@ let rec repl () =
   flush stdout;
   begin
     try
-      let line = read_line () in
-        print_endline
-          @@ R5rsds.eval_to_string
-          @@ SchemeParser.read_from_string line
+      print_endline
+        @@ R5rsds.eval_to_string
+        @@ SchemeParser.read stdin
     with
     | R5rsds.Runtime_error (msg, objs) ->
         print_string ("*** ERROR: " ^ msg);

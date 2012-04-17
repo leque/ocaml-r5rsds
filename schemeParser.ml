@@ -34,7 +34,7 @@ let number =
      pure @@ int_of_string @@ s)
     <|> (char '0' >> pure 0)
 
-let wsp = char ' '
+let wsp = char ' ' <|> char '\n' <|> char '\t'
 let sps0 = many wsp
 let sps = many1 wsp
 
@@ -140,14 +140,13 @@ and syn_sexp () =
   <|> syn_id ()
   <|> syn_bool ()
 
-let sexp = surround sps0 (syn_sexp ()) << eof
+let sexp = sps0 >> (syn_sexp ())
+
+let end_of_input = sps0 >> eof >>= (fun _ -> raise End_of_file)
 
 let read chan  =
-  protect chan
-    (fun chan ->
-       let input = P.LazyList.of_char_channel chan in
-         parse_llist sexp input)
-    ~finally:close_in
+  let input = P.LazyList.of_char_channel chan in
+    parse_llist (sexp <|> end_of_input) input
 
 let read_from_string str =
   parse_string sexp str
