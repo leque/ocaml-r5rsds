@@ -34,7 +34,12 @@ let number =
      pure @@ int_of_string @@ s)
     <|> (char '0' >> pure 0)
 
-let wsp = char ' ' <|> char '\n' <|> char '\t'
+let comment =
+  char ';' >>
+  many (satisfy (fun c -> c <> '\n')) >>= fun _ ->
+  pure ' '
+
+let wsp = char ' ' <|> char '\n' <|> char '\t' <|> comment
 let sps0 = many wsp
 let sps = many1 wsp
 
